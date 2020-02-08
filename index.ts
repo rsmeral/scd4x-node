@@ -1,9 +1,9 @@
-import {open, close, isReady, readMeasurement} from './scd30';
+import {open, close, isDataReady, readMeasurement} from './scd30';
 
-(async () => {
+(async (): Promise<void> => {
   await open();
 
-  await isReady()
+  await isDataReady();
   console.log(await readMeasurement());
 
   await close();
