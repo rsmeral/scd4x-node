@@ -24,10 +24,11 @@ type Measurement = {
   relativeHumidity: number;
 };
 
-let bus;
+let bus: any;
 
-export const open = async (): Promise<void> => {
+export const open = async (): Promise<any> => {
   bus = await openPromisified(I2C_BUS_NUMBER);
+  return bus;
 };
 
 export const close = async (): Promise<void> => {
