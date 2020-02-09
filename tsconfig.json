@@ -4,7 +4,8 @@
     "target": "ES6",
     "noImplicitAny": false,
     "module": "CommonJS",
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "lib": ["ES6"]
   },
   "include": ["./src/**/*"]
 }
