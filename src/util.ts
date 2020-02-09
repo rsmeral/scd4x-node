@@ -19,7 +19,6 @@ export const read = async (bus: any, length: number): Promise<Buffer> => {
   const buf = Buffer.alloc(length);
   await bus.i2cRead(SCD30_ADDRESS, buf.length, buf);
 
-  console.log(buf);
   const data = crcCheck(buf);
 
   return data;

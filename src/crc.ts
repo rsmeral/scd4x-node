@@ -21,7 +21,6 @@ export const crcCheck = (buf: Buffer): Buffer => {
     }
 
     resultBuffer.set(receivedBytes, i * 2);
-    console.log(resultBuffer);
   }
 
   return resultBuffer;
