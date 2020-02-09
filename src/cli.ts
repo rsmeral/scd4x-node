@@ -1,6 +1,6 @@
 import program from 'commander';
 
-import {open} from './scd30';
+import {SCD30} from './scd30';
 import {
   isDataReadyAction,
   readMeasurementAction,
@@ -26,11 +26,11 @@ type Action = (...args: any[]) => Promise<void>;
 
 // ugly hack around poor async support in commander
 const withBus = (action: Action): Action => async (...args): Promise<void> => {
-  const bus = await open(program.bus);
+  const scd30 = await SCD30.connect(program.bus);
 
-  await action(args);
+  await action(scd30, args);
 
-  await bus.close();
+  await scd30.disconnect();
 }
 
 program
@@ -40,7 +40,7 @@ program
     'The number of the I2C bus to open.\n' +
     '0 for /dev/i2c-0, 1 for /dev/i2c-1, ...',
     parseInt,
-    '1'
+    1
   );
 
 program.command('is-data-ready')
