@@ -16,7 +16,7 @@ import {
   SCD30_CMD_SOFT_RESET
 } from './constants';
 
-const I2C_BUS_NUMBER = 1;
+const DEFAULT_I2C_BUS_NUMBER = 1;
 
 type Measurement = {
   co2Concentration: number;
@@ -26,8 +26,8 @@ type Measurement = {
 
 let bus: any;
 
-export const open = async (): Promise<any> => {
-  bus = await openPromisified(I2C_BUS_NUMBER);
+export const open = async (busNumber: number = DEFAULT_I2C_BUS_NUMBER): Promise<any> => {
+  bus = await openPromisified(busNumber);
   return bus;
 };
 

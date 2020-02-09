@@ -21,15 +21,35 @@ import {
   softResetAction
 } from './cliActions';
 
-program.name('scd30-cli');
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type Action = (...args: any[]) => Promise<void>;
+
+// ugly hack around poor async support in commander
+const withBus = (action: Action): Action => async (...args): Promise<void> => {
+  const bus = await open(program.bus);
+
+  await action(args);
+
+  await bus.close();
+}
+
+program
+  .name('scd30-cli')
+  .option(
+    '-b, --bus <number>',
+    'The number of the I2C bus to open.\n' +
+    '0 for /dev/i2c-0, 1 for /dev/i2c-1, ...',
+    parseInt,
+    '1'
+  );
 
 program.command('is-data-ready')
   .description('Determines if a measurement can be read from the sensor\'s buffer.')
-  .action(isDataReadyAction);
+  .action(withBus(isDataReadyAction));
 
 program.command('read-measurement')
   .description('Read a measurement of CO2 concentration, temperature, and humidity.')
-  .action(readMeasurementAction);
+  .action(withBus(readMeasurementAction));
 
 program.command('start-continuous-measurement [pressure]')
   .description('Starts continuous measurement of CO2 concentration, temperature, and humidity.', {
@@ -39,80 +59,74 @@ program.command('start-continuous-measurement [pressure]')
       'Setting to 0 deactivates ambient pressure compensation.\n' +
       'To set new value, re-run start-continuous-measurement.'
   })
-  .action(startContinuousMeasurementAction);
+  .action(withBus(startContinuousMeasurementAction));
 
 program.command('stop-continuous-measurement')
   .description('Stops continuous measurement of CO2 concentration, temperature, and humidity.')
-  .action(stopContinuousMeasurementAction);
+  .action(withBus(stopContinuousMeasurementAction));
 
 program.command('set-measurement-interval <interval>')
   .description('Sets the interval of continuous measurement.', {
     interval: 'Interval of 2–1800 seconds'
   })
-  .action(setMeasurementIntervalAction);
+  .action(withBus(setMeasurementIntervalAction));
 
 program.command('get-measurement-interval')
   .description('Returns the interval of continuous measurement.')
-  .action(getMeasurementIntervalAction);
+  .action(withBus(getMeasurementIntervalAction));
 
 program.command('start-asc')
   .description('Starts the automatic self-calibration.')
-  .action(startAscAction);
+  .action(withBus(startAscAction));
 
 program.command('stop-asc')
   .description('Stops the automatic self-calibration.')
-  .action(stopAscAction);
+  .action(withBus(stopAscAction));
 
 program.command('get-asc-status')
   .description('Returns the status of automatic self-calibration.')
-  .action(isAscActiveAction);
+  .action(withBus(isAscActiveAction));
 
 program.command('set-frc-value <co2ppm>')
   .description('Sets the reference CO2 concentration for forced re-calibration.', {
     co2ppm: 'Concentration of CO2, 400-2000 ppm'
   })
-  .action(setFrcValueAction);
+  .action(withBus(setFrcValueAction));
 
 program.command('get-frc-value')
   .description('Returns the reference CO2 concentration for forced re-calibration.')
-  .action(getFrcValueAction);
+  .action(withBus(getFrcValueAction));
 
 program.command('set-temp-offset <offset>')
   .description('Sets the temperature offset.', {
     offset: 'Temperature offset in units of 0.01°C'
   })
-  .action(setTempOffsetAction);
+  .action(withBus(setTempOffsetAction));
 
 program.command('get-temp-offset')
   .description('Returns the temperature offset.')
-  .action(getTempOffsetAction);
+  .action(withBus(getTempOffsetAction));
 
 program.command('set-altitude-compensation <altitude>')
   .description('Sets the altitude compensation value.', {
     altitude: 'Altitude in meters above sea level'
   })
-  .action(setAltitudeCompensationAction);
+  .action(withBus(setAltitudeCompensationAction));
 
 program.command('get-altitude-compensation')
   .description('Returns the altitude compensation value.')
-  .action(getAltitudeCompensationAction);
+  .action(withBus(getAltitudeCompensationAction));
 
 program.command('get-firmware-version')
   .description('Returns the firmware version.')
-  .action(getFirmwareVersionAction);
+  .action(withBus(getFirmwareVersionAction));
 
 program.command('soft-reset')
   .description('Performs a soft reset.')
-  .action(softResetAction);
+  .action(withBus(softResetAction));
 
 if (process.argv.length === 2) {
   program.help();
 }
 
-(async (): Promise<void> => {
-  const bus = await open();
-
-  await program.parseAsync(process.argv);
-
-  await bus.close();
-})();
+program.parseAsync(process.argv);
