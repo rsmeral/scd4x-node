@@ -84,7 +84,7 @@ export const readMeasurement = async (): Promise<Measurement> => {
  */
 export const startContinuousMeasurement = async (pressure = 0): Promise<void> => {
   if (pressure < 700 || pressure > 1400) {
-    throw new Error('Pressure out of range');
+    throw new Error('Pressure out of range. Must be between 700 and 1400, inclusive.');
   }
 
   await performCommand(bus, SCD30_CMD_START_PERIODIC_MEASUREMENT, integerToUint16(pressure));
@@ -115,7 +115,7 @@ export const getMeasurementInterval = async (): Promise<number> => {
  */
 export const setMeasurementInterval = async (interval: number): Promise<void> => {
   if (interval < 2 || interval > 1800) {
-    throw new Error('Measurement interval out of range');
+    throw new Error('Measurement interval out of range. Must be between 2 and 1800, inclusive.');
   }
 
   await performCommand(bus, SCD30_CMD_SET_MEASUREMENT_INTERVAL, integerToUint16(interval));
@@ -168,7 +168,7 @@ export const isAutomaticSelfCalibrationActive = async (): Promise<boolean> => {
  */
 export const setForcedRecalibrationValue = async (co2ppm: number): Promise<void> => {
   if (co2ppm < 400 || co2ppm > 2000) {
-    throw new Error('Reference CO2 concentration out of range');
+    throw new Error('Reference CO2 concentration out of range. Must be between 400 and 2000, inclusive.');
   }
 
   await performCommand(bus, SCD30_CMD_SET_FORCED_RECALIBRATION, integerToUint16(co2ppm));
