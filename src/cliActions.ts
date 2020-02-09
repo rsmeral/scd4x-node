@@ -167,3 +167,25 @@ export const softResetAction = async (scd30: SCD30): Promise<void> => {
 
   print('Soft reset performed.');
 };
+
+export const statusAction = async (scd30: SCD30): Promise<void> => {
+  const ready = await scd30.isDataReady();
+  const interval = await scd30.getMeasurementInterval();
+  const ascActive = await scd30.isAutomaticSelfCalibrationActive();
+  const frcValue = await scd30.getForcedRecalibrationValue();
+  const tempOffset = await scd30.getTemperatureOffset();
+  const altComp = await scd30.getAltitudeCompensation();
+  const fwVersion = await scd30.getFirmwareVersion();
+
+  const output = table([
+    ['Data ready', ready ? 'Yes' : 'No'],
+    ['Continuous measurement interval', `${interval} seconds`],
+    ['ASC active', ascActive ? 'Yes' : 'No'],
+    ['Reference CO2 concentration for FRC', `${frcValue} ppm`],
+    ['Temperature offset', `${tempOffset}°C`],
+    ['Altitude compensation', `${altComp} meters above sea level`],
+    ['Firmware version', fwVersion]
+  ]);
+
+  print(output);
+};

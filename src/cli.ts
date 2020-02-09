@@ -18,7 +18,8 @@ import {
   setAltitudeCompensationAction,
   getAltitudeCompensationAction,
   getFirmwareVersionAction,
-  softResetAction
+  softResetAction,
+  statusAction
 } from './cliActions';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -124,6 +125,13 @@ program.command('get-firmware-version')
 program.command('soft-reset')
   .description('Performs a soft reset.')
   .action(withBus(softResetAction));
+
+program.command('status')
+  .description(
+    'Queries for data ready status, ASC status, FRC value, temperature offset, altitude compensation,' +
+    'continuous measurement interval, and firmware version'
+  )
+  .action(withBus(statusAction));
 
 if (process.argv.length === 2) {
   program.help();
