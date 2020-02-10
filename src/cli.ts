@@ -22,6 +22,8 @@ import {
   statusAction
 } from './cliActions';
 
+const PROGRAM_NAME = 'scd30-cli';
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type Action = (...args: any[]) => Promise<void>;
 
@@ -35,7 +37,14 @@ const withBus = (action: Action): Action => async (...args): Promise<void> => {
 }
 
 program
-  .name('scd30-cli')
+  .name(PROGRAM_NAME)
+  .usage(
+    '[options] <command> [command-args]\n\n' +
+    'Examples:\n\n' +
+    `  $ ${PROGRAM_NAME} start-continuous-measurement\n` +
+    `  $ ${PROGRAM_NAME} read-measurement\n` +
+    `  $ ${PROGRAM_NAME} status`
+  )
   .option(
     '-b, --bus <number>',
     'The number of the I2C bus to open.\n' +
@@ -44,13 +53,20 @@ program
     1
   );
 
-program.command('is-data-ready')
-  .description('Determines if a measurement can be read from the sensor\'s buffer.')
-  .action(withBus(isDataReadyAction));
-
 program.command('read-measurement')
   .description('Read a measurement of CO2 concentration, temperature, and humidity.')
   .action(withBus(readMeasurementAction));
+
+program.command('status')
+  .description(
+    'Queries for data ready status, ASC status, FRC value, temperature offset, altitude compensation,' +
+    'continuous measurement interval, and firmware version'
+  )
+  .action(withBus(statusAction));
+
+program.command('is-data-ready')
+  .description('Determines if a measurement can be read from the sensor\'s buffer.')
+  .action(withBus(isDataReadyAction));
 
 program.command('start-continuous-measurement [pressure]')
   .description('Starts continuous measurement of CO2 concentration, temperature, and humidity.', {
@@ -126,12 +142,6 @@ program.command('soft-reset')
   .description('Performs a soft reset.')
   .action(withBus(softResetAction));
 
-program.command('status')
-  .description(
-    'Queries for data ready status, ASC status, FRC value, temperature offset, altitude compensation,' +
-    'continuous measurement interval, and firmware version'
-  )
-  .action(withBus(statusAction));
 
 if (process.argv.length === 2) {
   program.help();
