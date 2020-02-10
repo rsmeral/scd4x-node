@@ -5,10 +5,8 @@
   "author": "Ron Smeral",
   "main": "dist/index.js",
   "dependencies": {
-    "commander": "^4.1.1",
     "crc-full": "^1.1.0",
-    "i2c-bus": "^5.1.0",
-    "table": "^5.4.6"
+    "i2c-bus": "^5.1.0"
   },
   "devDependencies": {
     "@types/node": "^13.7.0",
