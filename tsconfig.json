@@ -1,11 +1,12 @@
 {
   "compilerOptions": {
-    "outDir": "./dist",
+    "outDir": "dist",
     "target": "ES6",
     "noImplicitAny": false,
     "module": "CommonJS",
     "esModuleInterop": true,
-    "lib": ["ES6"]
+    "lib": ["ES6"],
+    "declaration": true
   },
   "include": ["./src/**/*"]
 }

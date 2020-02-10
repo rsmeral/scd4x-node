@@ -93,8 +93,8 @@ export class SCD30 {
    * @param pressure Ambient pressure in mBar. Must be a value between 700 and 1400, inclusive.
    */
   startContinuousMeasurement = async (pressure = 0): Promise<void> => {
-    if (pressure < 700 || pressure > 1400) {
-      throw new Error('Pressure out of range. Must be between 700 and 1400, inclusive.');
+    if (pressure !== 0 && (pressure < 700 || pressure > 1400)) {
+      throw new Error('Pressure out of range. Must be either 0, or between 700 and 1400, inclusive.');
     }
 
     await performCommand(this.bus, SCD30_CMD_START_PERIODIC_MEASUREMENT, integerToUint16(pressure));

@@ -1,12 +1,14 @@
 {
-  "name": "scd30-mqtt",
+  "name": "scd30-node",
   "version": "1.0.0",
+  "license": "MIT",
+  "author": "Ron Smeral",
+  "main": "dist/index.js",
   "dependencies": {
     "commander": "^4.1.1",
     "crc-full": "^1.1.0",
     "i2c-bus": "^5.1.0",
-    "table": "^5.4.6",
-    "typescript": "^3.7.5"
+    "table": "^5.4.6"
   },
   "devDependencies": {
     "@types/node": "^13.7.0",
@@ -20,9 +22,12 @@
     "prettier": "^1.19.1",
     "squirrelly": "^7.9.1",
     "ts-node": "^8.6.2",
-    "typedoc": "^0.16.9"
+    "typedoc": "^0.16.9",
+    "typescript": "^3.7.5"
   },
   "scripts": {
-    "generate-docs": "ts-node scripts/generate-api-docs"
-  }
+    "generate-docs": "ts-node scripts/generate-api-docs",
+    "build": "tsc"
+  },
+  "types": "dist/index.d.ts"
 }
