@@ -6,17 +6,23 @@
     "crc-full": "^1.1.0",
     "i2c-bus": "^5.1.0",
     "table": "^5.4.6",
-    "ts-node": "^8.6.2",
     "typescript": "^3.7.5"
   },
   "devDependencies": {
     "@types/node": "^13.7.0",
+    "@types/squirrelly": "^7.1.0",
     "@types/table": "^4.0.7",
     "@typescript-eslint/eslint-plugin": "^2.19.0",
     "@typescript-eslint/parser": "^2.19.0",
     "eslint": "^6.8.0",
     "eslint-config-prettier": "^6.10.0",
     "eslint-plugin-prettier": "^3.1.2",
-    "prettier": "^1.19.1"
+    "prettier": "^1.19.1",
+    "squirrelly": "^7.9.1",
+    "ts-node": "^8.6.2",
+    "typedoc": "^0.16.9"
+  },
+  "scripts": {
+    "generate-docs": "ts-node scripts/generate-api-docs"
   }
 }

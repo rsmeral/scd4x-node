@@ -52,6 +52,15 @@ export class SCD30 {
 
   /**
    * Read a measurement of CO2 concentration, temperature, and humidity.
+   * Returns the measurement as an object:
+   * ```typescript
+   * {
+   *   co2Concentration: number;
+   *   temperature: number;
+   *   relativeHumidity: number;
+   * }
+   * ```
+   *
    * Make sure to call `isDataReady` before calling this.
    */
   readMeasurement = async (): Promise<Measurement> => {
@@ -141,7 +150,7 @@ export class SCD30 {
    *
    * @param enable Set to true to enable, or to false to disable ASC
    */
-  setAutomaticSelfCalibration = async (enable: boolean): Promise<void> =>
+  setAutomaticSelfCalibration = async (enable?: boolean): Promise<void> =>
     performCommand(this.bus, SCD30_CMD_AUTO_SELF_CALIBRATION, booleanToUint16(enable));
 
   /**
@@ -264,7 +273,5 @@ export class SCD30 {
   /**
    * Close the I2C bus.
    */
-  disconnect = async (): Promise<void> => {
-    this.bus.close();
-  };
+  disconnect = (): Promise<void> => this.bus.close();
 }
