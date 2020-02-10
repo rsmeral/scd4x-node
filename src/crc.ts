@@ -34,7 +34,7 @@ export const crcCompute = (buf: Buffer): Buffer => {
   const outBuffer = Buffer.alloc((buf.length * 3) / 2);
 
   for (let i = 0; i < buf.length / 2; i++) {
-    const inBytes = buf.slice(i * 2, i * 2 + 1);
+    const inBytes = buf.slice(i * 2, i * 2 + 2);
     const crcByte = CRC8.compute(inBytes);
 
     outBuffer.set(inBytes, i * 3);
