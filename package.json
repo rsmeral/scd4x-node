@@ -27,5 +27,11 @@
     "generate-docs": "ts-node scripts/generate-api-docs",
     "build": "tsc"
   },
-  "types": "dist/index.d.ts"
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "LICENSE.md",
+    "README.md",
+    "package.json"
+  ]
 }
