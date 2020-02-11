@@ -1,9 +1,11 @@
 {
   "name": "scd30-node",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "license": "MIT",
   "author": "Ron Smeral",
   "main": "dist/index.js",
+  "repository": "github:rsmeral/scd30-node",
+  "keywords": ["sensor", "co2", "i2c"],
   "dependencies": {
     "crc-full": "^1.1.0",
     "i2c-bus": "^5.1.0"
