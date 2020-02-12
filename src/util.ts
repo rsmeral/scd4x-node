@@ -1,4 +1,5 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+import {PromisifiedBus} from 'i2c-bus';
+
 import {crcCheck, crcCompute} from './crc';
 
 import {SCD30_ADDRESS} from './constants';
@@ -13,9 +14,11 @@ export const integerToUint16 = (value: number): Buffer => {
 
 export const booleanToUint16 = (value: boolean): Buffer => integerToUint16(value ? 1 : 0);
 
-export const write = async (bus: any, buf: Buffer): Promise<void> => bus.i2cWrite(SCD30_ADDRESS, buf.length, buf);
+export const write = async (bus: PromisifiedBus, buf: Buffer): Promise<void> => {
+  bus.i2cWrite(SCD30_ADDRESS, buf.length, buf);
+};
 
-export const read = async (bus: any, length: number): Promise<Buffer> => {
+export const read = async (bus: PromisifiedBus, length: number): Promise<Buffer> => {
   const buf = Buffer.alloc(length);
   await bus.i2cRead(SCD30_ADDRESS, buf.length, buf);
 
@@ -25,7 +28,7 @@ export const read = async (bus: any, length: number): Promise<Buffer> => {
 };
 
 export const performCommand = async (
-  bus: any,
+  bus: PromisifiedBus,
   command: number,
   commandArgs: Buffer = Buffer.from([])
 ): Promise<void> => {
@@ -33,7 +36,7 @@ export const performCommand = async (
 };
 
 export const performCommandAndRead = async (
-  bus: any,
+  bus: PromisifiedBus,
   command: number,
   readLength: number,
   commandArgs: Buffer = Buffer.from([])

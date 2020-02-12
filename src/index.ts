@@ -1,4 +1,4 @@
-import {openPromisified} from 'i2c-bus';
+import {openPromisified, PromisifiedBus} from 'i2c-bus';
 
 import {performCommand, performCommandAndRead, integerToUint16, booleanToUint16} from './util';
 
@@ -34,7 +34,7 @@ export class SCD30 {
     return new SCD30(bus);
   };
 
-  private constructor(private bus: any) {}
+  private constructor(private bus: PromisifiedBus) {}
 
   /**
    * Used to determine if a measurement can be read from the sensor's buffer.
