@@ -15,6 +15,7 @@
     "i2c-bus": "^5.1.0"
   },
   "devDependencies": {
+    "@types/i2c-bus": "^5.1.0",
     "@types/node": "^13.7.0",
     "@types/squirrelly": "^7.1.0",
     "@typescript-eslint/eslint-plugin": "^2.19.0",
