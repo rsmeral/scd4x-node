@@ -55,9 +55,10 @@ await scd30.disconnect();
 
 
 <a name="connect"></a>
-#### `public static connect(): Promise<SCD30>`
+#### `public static connect(busNumber: number = DEFAULT_I2C_BUS_NUMBER): Promise<SCD30>`
 
 Connects to the SCD30 on the given I2C bus.
+Default bus number is 1.
 
 <a name="isDataReady"></a>
 #### `isDataReady(): Promise<boolean>`
@@ -81,7 +82,7 @@ Returns the measurement as an object:
 ```
 
 <a name="startContinuousMeasurement"></a>
-#### `startContinuousMeasurement(): Promise<void>`
+#### `startContinuousMeasurement(pressure: number = 0): Promise<void>`
 
 Starts continuous measurement of CO2 concentration, temperature, and humidity.
 Measurement data which is not read from the sensor will be overwritten.
@@ -98,14 +99,14 @@ Stops continuous measurement.
 Returns current interval of continuous measurement.
 
 <a name="setMeasurementInterval"></a>
-#### `setMeasurementInterval(): Promise<void>`
+#### `setMeasurementInterval(interval: number): Promise<void>`
 
 Sets the interval of continuous measurement.
 Initial value is 2s. The chosen measurement interval is saved in non-volatile memory and thus is not reset
 to its initial value after power up.
 
 <a name="setAutomaticSelfCalibration"></a>
-#### `setAutomaticSelfCalibration(): Promise<void>`
+#### `setAutomaticSelfCalibration(enable?: boolean): Promise<void>`
 
 Activates or deactivates automatic self-calibration.
 
@@ -115,7 +116,7 @@ Activates or deactivates automatic self-calibration.
 Indicates whether automatic self-calibration is active.
 
 <a name="setForcedRecalibrationValue"></a>
-#### `setForcedRecalibrationValue(): Promise<void>`
+#### `setForcedRecalibrationValue(co2ppm: number): Promise<void>`
 
 Forced recalibration (FRC) is used to compensate for sensor drifts when a reference value of CO2 concentration in
 close proximity to the SCD30 is available. For best results, the sensor has to be run in a stable environment in
@@ -129,7 +130,7 @@ Returns the most recently used reference value of FRC.
 After repowering the sensor, the command will return the standard reference value of 400 ppm.
 
 <a name="setTemperatureOffset"></a>
-#### `setTemperatureOffset(): Promise<void>`
+#### `setTemperatureOffset(offset: number): Promise<void>`
 
 The on-board RH/T sensor is influenced by thermal self-heating of SCD30 and other electrical components. Design-in
 alters the thermal properties of SCD30 such that temperature and humidity offsets may occur when operating the
@@ -142,7 +143,7 @@ in continuous operation of the device into the sensor.
 Returns the temperature offset.
 
 <a name="setAltitudeCompensation"></a>
-#### `setAltitudeCompensation(): Promise<void>`
+#### `setAltitudeCompensation(altitude: number): Promise<void>`
 
 Measurements of CO2 concentration based on the NDIR principle are influenced by altitude. SCD30 can compensate
 deviations due to altitude. Setting altitude is disregarded when an ambient pressure was provided in

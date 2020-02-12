@@ -27,6 +27,7 @@ type Measurement = {
 export class SCD30 {
   /**
    * Connects to the SCD30 on the given I2C bus.
+   * Default bus number is 1.
    */
   public static connect = async (busNumber: number = DEFAULT_I2C_BUS_NUMBER): Promise<SCD30> => {
     const bus = await openPromisified(busNumber);

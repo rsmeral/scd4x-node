@@ -16,7 +16,7 @@ const API_DOC_TAG_END = '<!-- END API DOC -->';
 
 const app = new Application();
 app.options.setValue('tsconfig', TSCONFIG_DOCS_FILE);
-app.generateJson(['src/scd30.ts'], 'apidocs.json');
+app.generateJson(['src/index.ts'], 'apidocs.json');
 
 const typeToString = (type: any): string => {
   const typeName = type.name;
@@ -53,7 +53,7 @@ const typedocMethodToSimpleMember = (member: any) => ({
   name: member.name,
   returnType: typeToString(member.signatures[0].type),
   modifiers: modifiersToString(member.flags),
-  parameters: parametersToString(member.parameters),
+  parameters: parametersToString(member.signatures[0].parameters),
   comment: member?.comment?.shortText,
   order: member.sources[0].line
 });
@@ -67,7 +67,7 @@ const simpleMemberToTemplateObject = (m: any) => ({
 
 const apiDocs = JSON.parse(readFileSync(API_DOCS_JSON_FILE, 'utf8'));
 const scd30ClassMembers = apiDocs.children
-  .find(child => child.originalName === 'src/scd30.ts')
+  .find(child => child.originalName === 'src/index.ts')
   .children.find(child => child.name === 'SCD30')
   .children.filter(member => member.kindString === 'Method')
   .map(typedocMethodToSimpleMember)
