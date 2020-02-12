@@ -5,7 +5,11 @@
   "author": "Ron Smeral",
   "main": "dist/index.js",
   "repository": "github:rsmeral/scd30-node",
-  "keywords": ["sensor", "co2", "i2c"],
+  "keywords": [
+    "sensor",
+    "co2",
+    "i2c"
+  ],
   "dependencies": {
     "crc-full": "^1.1.0",
     "i2c-bus": "^5.1.0"
@@ -13,7 +17,6 @@
   "devDependencies": {
     "@types/node": "^13.7.0",
     "@types/squirrelly": "^7.1.0",
-    "@types/table": "^4.0.7",
     "@typescript-eslint/eslint-plugin": "^2.19.0",
     "@typescript-eslint/parser": "^2.19.0",
     "eslint": "^6.8.0",
