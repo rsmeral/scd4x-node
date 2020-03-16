@@ -31,7 +31,8 @@
   },
   "scripts": {
     "generate-docs": "ts-node scripts/generate-api-docs",
-    "build": "tsc"
+    "build": "tsc",
+    "prepack": "tsc"
   },
   "types": "dist/index.d.ts",
   "files": [
