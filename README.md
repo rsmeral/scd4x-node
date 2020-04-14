@@ -13,20 +13,20 @@ Uses [i2c-bus](https://github.com/fivdi/i2c-bus) for connection to the SCD30.
 yarn add scd30-node
 ```
 
-```typescript
-import {SCD30} from 'scd30-node';
+```javascript
+const {SCD30} = require('scd30-node');
 
-// ...
+(async () => {
+  const scd30 = await SCD30.connect();
+  await scd30.startContinuousMeasurement();
 
-const scd30 = await SCD30.connect();
-await scd30.startContinuousMeasurement();
+  const measurement = await scd30.readMeasurement();
+  console.log(`CO2 Concentration: ${measurement.co2Concentration} ppm`);
+  console.log(`Temperature: ${measurement.temperature} °C`);
+  console.log(`Humidity: ${measurement.relativeHumidity} %`);
 
-const measurement = await scd30.readMeasurement();
-console.log(measurement.co2Concentration);
-console.log(measurement.temperature);
-console.log(measurement.relativeHumidity);
-
-await scd30.disconnect();
+  await scd30.disconnect();
+})();
 ```
 
 ## API Documentation
