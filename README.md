@@ -1,168 +1,178 @@
-# scd30-node
+# scd4x-node
 
-Node.js library for [Sensirion SCD30](
-https://www.sensirion.com/en/environmental-sensors/carbon-dioxide-sensors/carbon-dioxide-sensors-co2/), the CO2, temperature, and humidity sensor.
+Node.js library for [Sensirion SCD40 and SCD41](https://www.sensirion.com/en/environmental-sensors/carbon-dioxide-sensors/carbon-dioxide-sensor-scd4x/), the CO2, temperature, and humidity sensors.
 
-The library exposes all of the commands supported by the SCD30, as documented in the official [Interface Description](https://www.sensirion.com/fileadmin/user_upload/customers/sensirion/Dokumente/9.5_CO2/Sensirion_CO2_Sensors_SCD30_Interface_Description.pdf).
+The library exposes all of the commands supported by the SCD40 and SCD41, as documented in the official [Datasheet](https://www.sensirion.com/fileadmin/user_upload/customers/sensirion/Dokumente/9.5_CO2/Sensirion_CO2_Sensors_SCD4x_Datasheet.pdf).
 
-Uses [i2c-bus](https://github.com/fivdi/i2c-bus) for connection to the SCD30.
+Uses [i2c-bus](https://github.com/fivdi/i2c-bus) for connection to the sensor.
 
 ## Usage
 
 ```bash
-yarn add scd30-node
+yarn add scd4x-node
 ```
 
 ```javascript
-const {SCD30} = require('scd30-node');
+const {SCD4x} = require('scd4x-node');
 
 (async () => {
-  const scd30 = await SCD30.connect();
-  await scd30.startContinuousMeasurement();
+  const scd4x = await SCD4x.connect();
+  await scd4x.startPeriodicMeasurement();
 
-  const measurement = await scd30.readMeasurement();
+  const measurement = await scd4x.readMeasurement();
   console.log(`CO2 Concentration: ${measurement.co2Concentration} ppm`);
   console.log(`Temperature: ${measurement.temperature} °C`);
   console.log(`Humidity: ${measurement.relativeHumidity} %`);
 
-  await scd30.disconnect();
+  await scd4x.disconnect();
 })();
 ```
 
 ## API Documentation
 
-### Class `SCD30`
+### Class `SCD4x`
 
 <!-- API DOC -->
 * [connect](#connect)
-* [isDataReady](#isDataReady)
+* [startPeriodicMeasurement](#startPeriodicMeasurement)
 * [readMeasurement](#readMeasurement)
-* [startContinuousMeasurement](#startContinuousMeasurement)
-* [stopContinuousMeasurement](#stopContinuousMeasurement)
-* [getMeasurementInterval](#getMeasurementInterval)
-* [setMeasurementInterval](#setMeasurementInterval)
-* [setAutomaticSelfCalibration](#setAutomaticSelfCalibration)
-* [isAutomaticSelfCalibrationActive](#isAutomaticSelfCalibrationActive)
-* [setForcedRecalibrationValue](#setForcedRecalibrationValue)
-* [getForcedRecalibrationValue](#getForcedRecalibrationValue)
+* [stopPeriodicMeasurement](#stopPeriodicMeasurement)
 * [setTemperatureOffset](#setTemperatureOffset)
 * [getTemperatureOffset](#getTemperatureOffset)
-* [setAltitudeCompensation](#setAltitudeCompensation)
-* [getAltitudeCompensation](#getAltitudeCompensation)
-* [getFirmwareVersion](#getFirmwareVersion)
-* [softReset](#softReset)
+* [setSensorAltitude](#setSensorAltitude)
+* [getSensorAltitude](#getSensorAltitude)
+* [setAmbientPressure](#setAmbientPressure)
+* [performForcedRecalibration](#performForcedRecalibration)
+* [setAutomaticSelfCalibrationEnabled](#setAutomaticSelfCalibrationEnabled)
+* [isAutomaticSelfCalibrationEnabled](#isAutomaticSelfCalibrationEnabled)
+* [startLowPowerPeriodicMeasurement](#startLowPowerPeriodicMeasurement)
+* [isDataReady](#isDataReady)
+* [persistSettings](#persistSettings)
+* [getSerialNumber](#getSerialNumber)
+* [passesSelfTest](#passesSelfTest)
+* [performFactoryReset](#performFactoryReset)
+* [reinit](#reinit)
+* [measureSingleShot](#measureSingleShot)
+* [measureSingleShotRhtOnly](#measureSingleShotRhtOnly)
 * [disconnect](#disconnect)
 
 
 <a name="connect"></a>
-#### `public static connect(busNumber: number = DEFAULT_I2C_BUS_NUMBER): Promise<SCD30>`
+#### `public static connect(busNumber: number = DEFAULT_I2C_BUS_NUMBER): Promise<SCD4x>`
 
-Connects to the SCD30 on the given I2C bus.
+Connects to the SCD4x on the given I2C bus.
 Default bus number is 1.
 
-<a name="isDataReady"></a>
-#### `isDataReady(): Promise<boolean>`
+<a name="startPeriodicMeasurement"></a>
+#### `startPeriodicMeasurement(): Promise<void>`
 
-Used to determine if a measurement can be read from the sensor's buffer.
-Whenever there is a measurement available from the internal buffer this function returns true, and false otherwise.
-As soon as the measurement has been read, the return value changes to false.
-It is recommended to call this function before calling `readMeasurement`.
+Start periodic measurement, signal update interval is 5 seconds.
 
 <a name="readMeasurement"></a>
 #### `readMeasurement(): Promise<Measurement>`
 
 Read a measurement of CO2 concentration, temperature, and humidity.
-Returns the measurement as an object:
-```typescript
-{
-  co2Concentration: number;
-  temperature: number;
-  relativeHumidity: number;
-}
-```
 
-<a name="startContinuousMeasurement"></a>
-#### `startContinuousMeasurement(pressure: number = 0): Promise<void>`
-
-Starts continuous measurement of CO2 concentration, temperature, and humidity.
-Measurement data which is not read from the sensor will be overwritten.
-The measurement interval is adjustable via `setMeasurementInterval`, initial measurement rate is 2s.
-
-<a name="stopContinuousMeasurement"></a>
-#### `stopContinuousMeasurement(): Promise<void>`
+<a name="stopPeriodicMeasurement"></a>
+#### `stopPeriodicMeasurement(): Promise<void>`
 
 Stops continuous measurement.
-
-<a name="getMeasurementInterval"></a>
-#### `getMeasurementInterval(): Promise<number>`
-
-Returns current interval of continuous measurement.
-
-<a name="setMeasurementInterval"></a>
-#### `setMeasurementInterval(interval: number): Promise<void>`
-
-Sets the interval of continuous measurement.
-Initial value is 2s. The chosen measurement interval is saved in non-volatile memory and thus is not reset
-to its initial value after power up.
-
-<a name="setAutomaticSelfCalibration"></a>
-#### `setAutomaticSelfCalibration(enable?: boolean): Promise<void>`
-
-Activates or deactivates automatic self-calibration.
-
-<a name="isAutomaticSelfCalibrationActive"></a>
-#### `isAutomaticSelfCalibrationActive(): Promise<boolean>`
-
-Indicates whether automatic self-calibration is active.
-
-<a name="setForcedRecalibrationValue"></a>
-#### `setForcedRecalibrationValue(co2ppm: number): Promise<void>`
-
-Forced recalibration (FRC) is used to compensate for sensor drifts when a reference value of CO2 concentration in
-close proximity to the SCD30 is available. For best results, the sensor has to be run in a stable environment in
-continuous mode at a measurement rate of 2s for at least two minutes before applying the FRC command and sending
-the reference value.
-
-<a name="getForcedRecalibrationValue"></a>
-#### `getForcedRecalibrationValue(): Promise<number>`
-
-Returns the most recently used reference value of FRC.
-After repowering the sensor, the command will return the standard reference value of 400 ppm.
 
 <a name="setTemperatureOffset"></a>
 #### `setTemperatureOffset(offset: number): Promise<void>`
 
-The on-board RH/T sensor is influenced by thermal self-heating of SCD30 and other electrical components. Design-in
-alters the thermal properties of SCD30 such that temperature and humidity offsets may occur when operating the
-sensor in end-customer devices. Compensation of those effects is achievable by writing the temperature offset found
-in continuous operation of the device into the sensor.
+Set temperature offset to improve accuracy of temperature and relative humidity measurements.
+To save the setting permanently, call also `persistSettings`.
 
 <a name="getTemperatureOffset"></a>
 #### `getTemperatureOffset(): Promise<number>`
 
 Returns the temperature offset.
 
-<a name="setAltitudeCompensation"></a>
-#### `setAltitudeCompensation(altitude: number): Promise<void>`
+<a name="setSensorAltitude"></a>
+#### `setSensorAltitude(altitude: number): Promise<void>`
 
-Measurements of CO2 concentration based on the NDIR principle are influenced by altitude. SCD30 can compensate
-deviations due to altitude. Setting altitude is disregarded when an ambient pressure was provided in
-`startContinuousMeasurement`.
+Reading and writing of the sensor altitude must be done while the SCD4x is in idle mode.
+Typically, the sensor altitude is set once after device installation.
 
-<a name="getAltitudeCompensation"></a>
-#### `getAltitudeCompensation(): Promise<number>`
+<a name="getSensorAltitude"></a>
+#### `getSensorAltitude(): Promise<number>`
 
 Returns the altitude compensation value in meters.
 
-<a name="getFirmwareVersion"></a>
-#### `getFirmwareVersion(): Promise<string>`
+<a name="setAmbientPressure"></a>
+#### `setAmbientPressure(pressure: number): Promise<void>`
 
-Returns the firmware version of SCD30.
+Can be sent during periodic measurements to enable continuous pressure compensation.
+Overrides any pressure compensation based on sensor altitude.
 
-<a name="softReset"></a>
-#### `softReset(): Promise<void>`
+<a name="performForcedRecalibration"></a>
+#### `performForcedRecalibration(co2ppm: number): Promise<number>`
 
-Perform soft reset.
+To successfully conduct an accurate forced recalibration, the following steps need to be carried out:
+1. Operate the SCD4x in the operation mode later used in normal sensor operation (periodic measurement,
+low power periodic measurement or single shot) for > 3 minutes in an environment with homogenous and
+constant CO2 concentration.
+2. Call `stopPeriodicMeasurement`.
+3. Call `performForcedRecalibration` and optionally read out the FRC correction (i.e. the magnitude of
+the correction).
+
+<a name="setAutomaticSelfCalibrationEnabled"></a>
+#### `setAutomaticSelfCalibrationEnabled(enable: boolean): Promise<void>`
+
+Activates or deactivates automatic self-calibration.
+
+<a name="isAutomaticSelfCalibrationEnabled"></a>
+#### `isAutomaticSelfCalibrationEnabled(): Promise<boolean>`
+
+Indicates whether automatic self-calibration is active.
+
+<a name="startLowPowerPeriodicMeasurement"></a>
+#### `startLowPowerPeriodicMeasurement(): Promise<void>`
+
+Start low power periodic measurement.
+Signal update interval is approximately 30 seconds.
+
+<a name="isDataReady"></a>
+#### `isDataReady(): Promise<boolean>`
+
+Indicates whether a measurement can be read from the sensor's buffer.
+
+<a name="persistSettings"></a>
+#### `persistSettings(): Promise<void>`
+
+Stores current configuration in the EEPROM of the SCD4x, making it persistent across power-cycling.
+
+<a name="getSerialNumber"></a>
+#### `getSerialNumber(): Promise<number>`
+
+Returns the unique 48-bit serial number identifying the chip and verifying the presence of the sensor.
+
+<a name="passesSelfTest"></a>
+#### `passesSelfTest(): Promise<boolean>`
+
+Performs a self test to check sensor functionality.
+
+<a name="performFactoryReset"></a>
+#### `performFactoryReset(): Promise<void>`
+
+Resets all configuration settings stored in the EEPROM and erases the FRC and ASC algorithm history.
+
+<a name="reinit"></a>
+#### `reinit(): Promise<void>`
+
+Reinitializes the sensor by reloading user settings from EEPROM.
+
+<a name="measureSingleShot"></a>
+#### `measureSingleShot(): Promise<void>`
+
+Perform an on-demand measurement of CO2 concentration, relative humidity and temperature.
+
+<a name="measureSingleShotRhtOnly"></a>
+#### `measureSingleShotRhtOnly(): Promise<void>`
+
+Perform an on-demand measurement of relative humidity and temperature only.
+CO2 output is returned as 0 ppm.
 
 <a name="disconnect"></a>
 #### `disconnect(): Promise<void>`

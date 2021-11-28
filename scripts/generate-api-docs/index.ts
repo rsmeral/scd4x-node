@@ -66,16 +66,16 @@ const simpleMemberToTemplateObject = (m: any) => ({
 });
 
 const apiDocs = JSON.parse(readFileSync(API_DOCS_JSON_FILE, 'utf8'));
-const scd30ClassMembers = apiDocs.children
+const scd4xClassMembers = apiDocs.children
   .find(child => child.originalName === 'src/index.ts')
-  .children.find(child => child.name === 'SCD30')
+  .children.find(child => child.name === 'SCD4x')
   .children.filter(member => member.kindString === 'Method')
   .map(typedocMethodToSimpleMember)
   .map(simpleMemberToTemplateObject)
   .sort((a, b) => a.order - b.order);
 
 const data = {
-  members: scd30ClassMembers
+  members: scd4xClassMembers
 };
 
 Sqrl.autoEscaping(false);
