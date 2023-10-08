@@ -1,8 +1,8 @@
 # scd4x-node
 
-Node.js library for [Sensirion SCD40 and SCD41](https://www.sensirion.com/en/environmental-sensors/carbon-dioxide-sensors/carbon-dioxide-sensor-scd4x/), the CO2, temperature, and humidity sensors.
+Node.js library for [Sensirion SCD40 and SCD41](https://www.sensirion.com/search/products?q=SCD4x), the CO2, temperature, and humidity sensors.
 
-The library exposes all of the commands supported by the SCD40 and SCD41, as documented in the official [Datasheet](https://www.sensirion.com/fileadmin/user_upload/customers/sensirion/Dokumente/9.5_CO2/Sensirion_CO2_Sensors_SCD4x_Datasheet.pdf).
+The library exposes all of the commands supported by the SCD40 and SCD41, as documented in the official [Datasheet](https://sensirion.com/media/documents/48C4B7FB/6426E14D/CD_DS_SCD40_SCD41_Datasheet_D1_052023.pdf).
 
 Uses [i2c-bus](https://github.com/fivdi/i2c-bus) for connection to the sensor.
 
@@ -17,7 +17,14 @@ const {SCD4x} = require('scd4x-node');
 
 (async () => {
   const scd4x = await SCD4x.connect();
-  await scd4x.startPeriodicMeasurement();
+
+  try {
+    await scd4x.startPeriodicMeasurement();
+    // data is available 5s after starting periodic measurement
+    await new Promise(resolve => setTimeout(resolve, 5000));
+  } catch(e) {
+    console.log('Periodic measurement already turned on')
+  }
 
   const measurement = await scd4x.readMeasurement();
   console.log(`CO2 Concentration: ${measurement.co2Concentration} ppm`);
