@@ -4,7 +4,7 @@ import {crcCheck, crcCompute} from './crc';
 
 import {SCD4X_ADDRESS} from './constants';
 
-export const sleep = (durationMs: number): Promise<void> => new Promise(resolve => setTimeout(resolve, durationMs));
+export const sleep = (durationMs: number): Promise<void> => new Promise((resolve) => setTimeout(resolve, durationMs));
 
 export const commandToBuffer = (command: number): Buffer => Buffer.from([command >> 8, command & 0xff]);
 
