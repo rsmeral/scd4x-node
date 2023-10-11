@@ -1,6 +1,6 @@
 {
   "name": "scd4x-node",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "license": "MIT",
   "author": "Ron Smeral",
   "main": "dist/index.js",
